@@ -1,0 +1,107 @@
+# Я настроил этот workflow для автоматической сборки
+# Каждый раз когда я пушу в main, GitHub сам собирает проект
+# И создаёт релиз с готовыми файлами
+
+name: Build and Release
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  # Можно запускать вручную из вкладки Actions
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    name: Build Windows x64
+    
+    steps:
+    # Шаг 1: Получаю код из репозитория
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    # Шаг 2: Устанавливаю .NET 8
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    # Шаг 3: Запускаю мой скрипт сборки
+    - name: Build with script
+      shell: pwsh
+      run: |
+        .\scripts\windows\build.ps1 -Configuration Release -Runtime win-x64 -Clean -CreateZip
+    
+    # Шаг 4: Сохраняю артефакты (готовые файлы)
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: HtmlReportViewer-Windows
+        path: |
+          publish/
+          *.zip
+        retention-days: 30
+
+  build-linux:
+    runs-on: ubuntu-latest
+    name: Build Linux x64
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    # Устанавливаю зависимости для Avalonia WebView
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgtk-3-0 libwebkit2gtk-4.0-37
+    
+    - name: Build with script
+      run: |
+        chmod +x ./scripts/linux/build.sh
+        ./scripts/linux/build.sh
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: HtmlReportViewer-Linux
+        path: publish/
+        retention-days: 30
+
+  # Создание релиза при пуше тега (например v1.0.0)
+  release:
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Download Windows artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: HtmlReportViewer-Windows
+        path: ./artifacts/windows
+    
+    - name: Download Linux artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: HtmlReportViewer-Linux
+        path: ./artifacts/linux
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ./artifacts/windows/*.zip
+          ./artifacts/linux/**/**
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
