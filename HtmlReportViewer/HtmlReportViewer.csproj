@@ -29,10 +29,8 @@
 		<!-- НОВОЕ: Встроенный WebView из Avalonia v12 (бесплатный!) -->
 		<PackageReference Include="Avalonia.Browser" Version="12.0.0-preview2" />
 
-		<PackageReference Include="Avalonia.Diagnostics" Version="12.0.0-preview2">
-			<IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
-			<PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
-		</PackageReference>
+		<!-- Diagnostics убран - пакета preview версии не существует -->
+		<!-- Можно добавить обратно после выхода stable v12 -->
 
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		
