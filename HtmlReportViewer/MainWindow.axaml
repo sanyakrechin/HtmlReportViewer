@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:webview="clr-namespace:WebViewControl;assembly=WebViewControl.Avalonia"
+        xmlns:browser="clr-namespace:Avalonia.Browser;assembly=Avalonia.Browser"
         x:Class="HtmlReportViewer.MainWindow"
         Title="HTML Report Viewer"
         Width="1200"
@@ -10,9 +10,7 @@
     <!-- Главное меню -->
     <Menu DockPanel.Dock="Top">
       <MenuItem Header="File">
-        <!-- ДОБАВЬТЕ ЭТУ СТРОКУ: -->
         <MenuItem Header="Open..." Click="OnOpenClick" HotKey="Ctrl+O"/>
-        
         <MenuItem Header="Print..." Click="OnPrintClick" HotKey="Ctrl+P"/>
         <Separator/>
         <MenuItem Header="Exit" Click="OnExitClick"/>
@@ -22,7 +20,7 @@
       </MenuItem>
     </Menu>
 
-    <!-- WebView -->
-    <webview:WebView x:Name="webView" Loaded="OnWebViewLoaded"/>
+    <!-- AVALONIA v12: Встроенный WebView из Avalonia.Browser -->
+    <browser:WebView x:Name="webView" Loaded="OnWebViewLoaded"/>
   </DockPanel>
 </Window>

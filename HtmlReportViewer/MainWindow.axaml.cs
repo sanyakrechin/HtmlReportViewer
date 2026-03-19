@@ -1,11 +1,12 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Browser;  // AVALONIA v12: WebView здесь!
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.Platform.Storage;  // ДОБАВЬТЕ ЭТОТ using
+using Avalonia.Platform.Storage;
 using System;
 using System.IO;
-using System.Linq;  // ДОБАВЬТЕ ЭТОТ using
+using System.Linq;
 
 namespace HtmlReportViewer;
 
@@ -30,7 +31,8 @@ public partial class MainWindow : Window
 
     private void OnWebViewLoaded(object? sender, RoutedEventArgs e)
     {
-        var webView = this.FindControl<WebViewControl.WebView>("webView");
+        // AVALONIA v12: WebView из Avalonia.Browser
+        var webView = this.FindControl<WebView>("webView");
 
         if (webView != null && !string.IsNullOrEmpty(_htmlPath))
         {
@@ -38,10 +40,12 @@ public partial class MainWindow : Window
 
             if (File.Exists(fullPath))
             {
-                webView.Address = new Uri(fullPath).AbsoluteUri;
+                // v12: используем Source вместо Address
+                webView.Source = new Uri(fullPath);
             }
             else
             {
+                // v12: LoadHtml
                 webView.LoadHtml($@"
                     <html>
                         <body style='font-family: Arial; padding: 20px;'>
@@ -53,10 +57,9 @@ public partial class MainWindow : Window
         }
     }
 
-    // ДОБАВЬТЕ ЭТОТ МЕТОД:
     private async void OnOpenClick(object? sender, RoutedEventArgs e)
     {
-        var webView = this.FindControl<WebViewControl.WebView>("webView");
+        var webView = this.FindControl<WebView>("webView");
         if (webView == null) return;
 
         var options = new FilePickerOpenOptions
@@ -82,19 +85,21 @@ public partial class MainWindow : Window
         {
             var path = files[0].Path.LocalPath;
             _htmlPath = path;
-            webView.Address = new Uri(path).AbsoluteUri;
+            // v12: Source вместо Address
+            webView.Source = new Uri(path);
         }
     }
 
     private void OnPrintClick(object? sender, RoutedEventArgs e)
     {
-        var webView = this.FindControl<WebViewControl.WebView>("webView");
+        var webView = this.FindControl<WebView>("webView");
+        // v12: ExecuteScript
         webView?.ExecuteScript("window.print();");
     }
 
     private void OnReloadClick(object? sender, RoutedEventArgs e)
     {
-        var webView = this.FindControl<WebViewControl.WebView>("webView");
+        var webView = this.FindControl<WebView>("webView");
         webView?.Reload();
     }
 
