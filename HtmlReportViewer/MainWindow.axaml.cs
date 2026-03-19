@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Browser;  // AVALONIA v12: WebView здесь!
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
@@ -30,7 +31,7 @@ public partial class MainWindow : Window
 
     private void OnWebViewLoaded(object? sender, RoutedEventArgs e)
     {
-        // AVALONIA v12: Встроенный WebView из Avalonia.Controls
+        // AVALONIA v12: WebView из Avalonia.Browser
         var webView = this.FindControl<WebView>("webView");
 
         if (webView != null && !string.IsNullOrEmpty(_htmlPath))
@@ -44,7 +45,7 @@ public partial class MainWindow : Window
             }
             else
             {
-                // v12: LoadHtml может иметь другую сигнатуру
+                // v12: LoadHtml
                 webView.LoadHtml($@"
                     <html>
                         <body style='font-family: Arial; padding: 20px;'>
@@ -92,7 +93,7 @@ public partial class MainWindow : Window
     private void OnPrintClick(object? sender, RoutedEventArgs e)
     {
         var webView = this.FindControl<WebView>("webView");
-        // v12: ExecuteScript вместо ExecuteScriptAsync (или async версия если есть)
+        // v12: ExecuteScript
         webView?.ExecuteScript("window.print();");
     }
 

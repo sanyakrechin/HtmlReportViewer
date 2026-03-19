@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:browser="clr-namespace:Avalonia.Browser;assembly=Avalonia.Browser"
         x:Class="HtmlReportViewer.MainWindow"
         Title="HTML Report Viewer"
         Width="1200"
@@ -19,7 +20,7 @@
       </MenuItem>
     </Menu>
 
-    <!-- AVALONIA v12: Встроенный WebView (бесплатный!) -->
-    <WebView x:Name="webView" Loaded="OnWebViewLoaded"/>
+    <!-- AVALONIA v12: Встроенный WebView из Avalonia.Browser -->
+    <browser:WebView x:Name="webView" Loaded="OnWebViewLoaded"/>
   </DockPanel>
 </Window>
