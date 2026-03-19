@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
-using Avalonia.WebView;  // MIGRATION: Новый namespace для WebView v12
 using System;
 using System.IO;
 using System.Linq;
@@ -31,8 +30,8 @@ public partial class MainWindow : Window
 
     private void OnWebViewLoaded(object? sender, RoutedEventArgs e)
     {
-        // MIGRATION: Теперь используем Avalonia.WebView.WebView вместо WebViewControl.WebView
-        var webView = this.FindControl<Avalonia.WebView.WebView>("webView");
+        // AVALONIA v12: Встроенный WebView из Avalonia.Controls
+        var webView = this.FindControl<WebView>("webView");
 
         if (webView != null && !string.IsNullOrEmpty(_htmlPath))
         {
@@ -40,12 +39,12 @@ public partial class MainWindow : Window
 
             if (File.Exists(fullPath))
             {
-                // MIGRATION: Новый API может отличаться - проверяем на соответствие документации v12
+                // v12: используем Source вместо Address
                 webView.Source = new Uri(fullPath);
             }
             else
             {
-                // MIGRATION: LoadHtml теперь может иметь другую сигнатуру
+                // v12: LoadHtml может иметь другую сигнатуру
                 webView.LoadHtml($@"
                     <html>
                         <body style='font-family: Arial; padding: 20px;'>
@@ -59,8 +58,7 @@ public partial class MainWindow : Window
 
     private async void OnOpenClick(object? sender, RoutedEventArgs e)
     {
-        // MIGRATION: Обновленный тип WebView
-        var webView = this.FindControl<Avalonia.WebView.WebView>("webView");
+        var webView = this.FindControl<WebView>("webView");
         if (webView == null) return;
 
         var options = new FilePickerOpenOptions
@@ -86,21 +84,21 @@ public partial class MainWindow : Window
         {
             var path = files[0].Path.LocalPath;
             _htmlPath = path;
-            // MIGRATION: Source вместо Address
+            // v12: Source вместо Address
             webView.Source = new Uri(path);
         }
     }
 
     private void OnPrintClick(object? sender, RoutedEventArgs e)
     {
-        var webView = this.FindControl<Avalonia.WebView.WebView>("webView");
-        // MIGRATION: ExecuteScriptAsync вместо ExecuteScript (async в v12)
-        webView?.ExecuteScriptAsync("window.print();");
+        var webView = this.FindControl<WebView>("webView");
+        // v12: ExecuteScript вместо ExecuteScriptAsync (или async версия если есть)
+        webView?.ExecuteScript("window.print();");
     }
 
     private void OnReloadClick(object? sender, RoutedEventArgs e)
     {
-        var webView = this.FindControl<Avalonia.WebView.WebView>("webView");
+        var webView = this.FindControl<WebView>("webView");
         webView?.Reload();
     }
 

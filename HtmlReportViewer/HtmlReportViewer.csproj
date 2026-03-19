@@ -19,23 +19,25 @@
 		<AvaloniaResource Include="Assets\**" />
 	</ItemGroup>
 
-	<!-- MIGRATION: Avalonia v12 с бесплатным WebView -->
+	<!-- AVALONIA v12 PREVIEW — используем preview для доступа к бесплатному WebView -->
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="12.0.0" />
-		<PackageReference Include="Avalonia.Desktop" Version="12.0.0" />
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.0" />
-		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.0" />
-		<PackageReference Include="Avalonia.WebView" Version="12.0.0" />
+		<PackageReference Include="Avalonia" Version="12.0.0-preview2" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.0.0-preview2" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.0-preview2" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.0-preview2" />
+		
+		<!-- НОВОЕ: Встроенный WebView из Avalonia v12 (бесплатный!) -->
+		<PackageReference Include="Avalonia.Browser" Version="12.0.0-preview2" />
 
-		<PackageReference Include="Avalonia.Diagnostics" Version="12.0.0">
+		<PackageReference Include="Avalonia.Diagnostics" Version="12.0.0-preview2">
 			<IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
 			<PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
 		</PackageReference>
 
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		
-		<!-- УДАЛЕНО: CefGlue.Avalonia - больше не нужен -->
-		<!-- УДАЛЕНО: WebViewControl-Avalonia - заменен на встроенный Avalonia.WebView -->
+		<!-- УДАЛЕНО: CefGlue.Avalonia - заменен на встроенный -->
+		<!-- УДАЛЕНО: WebViewControl-Avalonia - заменен на встроенный -->
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,82 +1,78 @@
-# Миграция на Avalonia v12 с бесплатным WebView
+# Миграция на Avalonia v12 Preview с бесплатным WebView
 
-## Что изменилось
+## ⚠️ ВАЖНО: Используется Preview версия!
 
-В Avalonia v12 WebView стал **бесплатным и open source**! Это позволяет отказаться от сторонних зависимостей (CefGlue, WebViewControl) и использовать встроенный компонент.
+Эта ветка использует **Avalonia v12.0.0-preview2** для доступа к встроенному бесплатному WebView.
 
-## Преимущества миграции
+## Преимущества
 
-- ✅ **Бесплатно** - больше никаких лицензионных ограничений
-- ✅ **Open Source** - полный доступ к исходному коду
-- ✅ **Кроссплатформенность** - единый API для Windows, Linux, macOS
-- ✅ **Нет зависимостей** - не требуется WebView2 Runtime или WebKit2GTK
-- ✅ **RedOS совместимость** - работает без дополнительных пакетов
+- ✅ **Бесплатный WebView** — встроен в Avalonia v12, не требует лицензий
+- ✅ **Нет CefGlue** — легче, меньше зависимостей
+- ✅ **Нет WebViewControl** — единый API
+- ✅ **Кроссплатформенность** — Windows и Linux из коробки
 
-## Изменения в проекте
+## Риски Preview
 
-### 1. Обновлены пакеты (csproj)
+- ⚠️ Могут быть баги (это preview, не stable)
+- ⚠️ API может измениться до stable релиза
+- ⚠️ Не рекомендуется для production критичных систем
+
+## Технические изменения
+
+### Пакеты (csproj)
 ```xml
-<!-- Было -->
-<PackageReference Include="Avalonia" Version="11.3.12" />
-<PackageReference Include="CefGlue.Avalonia" Version="120.6099.211" />
-<PackageReference Include="WebViewControl-Avalonia" Version="3.120.11" />
+<!-- Стало: Avalonia v12 Preview -->
+<PackageReference Include="Avalonia" Version="12.0.0-preview2" />
+<PackageReference Include="Avalonia.Browser" Version="12.0.0-preview2" />
 
-<!-- Стало -->
-<PackageReference Include="Avalonia" Version="12.0.0" />
-<PackageReference Include="Avalonia.WebView" Version="12.0.0" />
+<!-- Удалены: -->
+<!-- <PackageReference Include="CefGlue.Avalonia" ... /> -->
+<!-- <PackageReference Include="WebViewControl-Avalonia" ... /> -->
 ```
 
-### 2. Изменены namespace (axaml)
-```xml
-<!-- Было -->
-xmlns:webview="clr-namespace:WebViewControl;assembly=WebViewControl.Avalonia"
-
-<!-- Стало -->
-xmlns:webview="clr-namespace:Avalonia.WebView;assembly=Avalonia.WebView"
-```
-
-### 3. Обновлен код (C#)
+### Код (C#)
 ```csharp
-// Было
+// Было (WebViewControl)
 using WebViewControl;
 var webView = this.FindControl<WebView>("webView");
 webView.Address = new Uri(path).AbsoluteUri;
 
-// Стало
-using Avalonia.WebView;
-var webView = this.FindControl<Avalonia.WebView.WebView>("webView");
+// Стало (Avalonia v12 встроенный)
+using Avalonia.Controls;  // WebView тут!
+var webView = this.FindControl<WebView>("webView");
 webView.Source = new Uri(path);
 ```
 
-## Известные изменения API
+### XAML
+```xml
+<!-- Было -->
+xmlns:webview="clr-namespace:WebViewControl;assembly=WebViewControl.Avalonia"
+<webview:WebView x:Name="webView" .../>
 
-| Старое (WebViewControl) | Новое (Avalonia.WebView v12) |
-|-------------------------|------------------------------|
-| `Address` | `Source` |
-| `ExecuteScript()` | `ExecuteScriptAsync()` |
-| `LoadHtml(string)` | `LoadHtml(string, string?)` |
+<!-- Стало -->
+<WebView x:Name="webView" .../>
+```
 
-## Установка и запуск
+## Сборка
 
 ### Windows
 ```bash
 dotnet build
-./HtmlReportViewer.exe report.html
 ```
 
-### Linux (включая RedOS)
+### Linux (включая RedOS!)
 ```bash
 dotnet build
-./HtmlReportViewer report.html
+# WebKit2GTK больше не нужен!
 ```
 
-**Важно:** На Linux больше не требуется устанавливать WebKit2GTK!
+## Планы
 
-## Требования
+- [ ] Протестировать на Windows
+- [ ] Протестировать на Linux/RedOS
+- [ ] Протестировать на реальных HTML отчетах
+- [ ] Обновить до stable v12 когда выйдет
 
-- .NET 8.0 или выше
-- Avalonia v12.0.0 или выше
+## Обратная связь
 
-## Обратная совместимость
-
-⚠️ **Breaking changes:** Avalonia v12 имеет изменения по сравнению с v11. Рекомендуется протестировать все функции перед production использованием.
+Если найдешь баги — пиши в Issues!
