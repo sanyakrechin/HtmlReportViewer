@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0</TargetFramework>
@@ -8,7 +8,7 @@
 
 		<!-- Исправлено: RuntimeIdentifiers (множественное число) -->
 		<PlatformTarget>x64</PlatformTarget>
-		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+		<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
 
 		<!-- ДОБАВЛЕНО: Аргументы запуска -->
 		<StartArguments>index.html</StartArguments>
@@ -19,20 +19,23 @@
 		<AvaloniaResource Include="Assets\**" />
 	</ItemGroup>
 
+	<!-- MIGRATION: Avalonia v12 с бесплатным WebView -->
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="11.3.12" />
-		<PackageReference Include="Avalonia.Desktop" Version="11.3.12" />
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.12" />
-		<PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.12" />
+		<PackageReference Include="Avalonia" Version="12.0.0" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.0.0" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.0" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.0" />
+		<PackageReference Include="Avalonia.WebView" Version="12.0.0" />
 
-		<PackageReference Include="Avalonia.Diagnostics" Version="11.3.12">
+		<PackageReference Include="Avalonia.Diagnostics" Version="12.0.0">
 			<IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
 			<PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
 		</PackageReference>
 
-		<PackageReference Include="CefGlue.Avalonia" Version="120.6099.211" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
-		<PackageReference Include="WebViewControl-Avalonia" Version="3.120.11" />
+		
+		<!-- УДАЛЕНО: CefGlue.Avalonia - больше не нужен -->
+		<!-- УДАЛЕНО: WebViewControl-Avalonia - заменен на встроенный Avalonia.WebView -->
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,6 +1,7 @@
 # Я настроил этот workflow для автоматической сборки
 # Каждый раз когда я пушу в main, GitHub сам собирает проект
 # И создаёт релиз с готовыми файлами
+# MIGRATION v12: Убрана установка WebKit2GTK - WebView теперь встроенный!
 
 name: Build and Release
 
@@ -57,11 +58,12 @@ jobs:
       with:
         dotnet-version: '8.0.x'
     
-    # Устанавливаю зависимости для Avalonia WebView
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libgtk-3-0 libwebkit2gtk-4.0-37
+    # MIGRATION v12: WebKit2GTK больше не нужен!
+    # Avalonia WebView v12 встроен и не требует системных зависимостей
+    # - name: Install dependencies
+    #   run: |
+    #     sudo apt-get update
+    #     sudo apt-get install -y libgtk-3-0 libwebkit2gtk-4.0-37
     
     - name: Build with script
       run: |
